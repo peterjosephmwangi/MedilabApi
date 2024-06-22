@@ -201,6 +201,25 @@ class MakeBooking(Resource):
         except:
             connection.rollback()
             return jsonify({"message":"BOOKING NOT VERIFIED"})
+        
+class MyBookings(Resource):
+        def get(self):
+            data = request.json
+            member_id= data["member_id"]
+            connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+            sql = "select* from bookings where member_id=%s "
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor.execute(sql, member_id)
+            if cursor.rowcount ==0:
+                return jsonify({"message":"No bookings found"})
+            else:
+                bookings =cursor.fetchall()
+                # data and time was not covertible to JSON
+                # Hence we use json.dumps and json.loads
+                import json
+                # we pass our bookings to json.dumps
+                ourbookings = json.dumps(bookings, indent=1, sort_keys=True, default=str)
+                return json.loads(ourbookings)
 
 
 
