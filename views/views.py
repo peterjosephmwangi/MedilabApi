@@ -71,6 +71,23 @@ class MemberSignin(Resource):
                 return jsonify({  "message":"LOGIN FAILED"  })
             else:
                 return jsonify({  "message": "Something went wrong" })
+            
+class MemberProfile(Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data = request.json
+        member_id = data["member_id"]
+        # connect to DB
+        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        sql = "SELECT * FROM members WHERE member_id = %s"
+        cursor  = connection.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(sql, member_id)
+        count = cursor.rowcount
+        if  count == 0:
+            return jsonify({  "message":"Member does not exist!"  })
+        else:
+            member = cursor.fetchone()
+            return jsonify({  "message": member })
 
 
 
