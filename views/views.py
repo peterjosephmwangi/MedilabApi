@@ -170,6 +170,37 @@ class LabTests(Resource):
         else:
             lab_tests = cursor.fetchall()
             return jsonify(lab_tests)
+        
+class MakeBooking(Resource):
+    def post(self):
+        data = request.json
+        member_id = data["member_id"]
+        booked_for = data["booked_for"]
+        dependant_id = data["dependant_id"]
+        test_id = data["test_id"]
+        appointment_date = data["appointment_date"]
+        appointment_time = data["appointment_time"]
+        where_taken = data["where_taken"]
+        latitude = data["latitude"]
+        longitude = data["longitude"]
+        status = data["status"]
+        lab_id = data["lab_id"]
+        invoice_no = data["invoice_no"]
+
+        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        cursor = connection.cursor()
+
+        sql = "insert into bookings(member_id,booked_for,dependant_id,test_id,appointment_date,appointment_time,where_taken,latitude,longitude,status,lab_id,invoice_no) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        data = (member_id,booked_for,dependant_id,test_id,appointment_date,appointment_time,where_taken,latitude,longitude,status,lab_id,invoice_no)
+        # cursor.execute(sql,data)
+        try:
+
+            cursor.execute(sql, data)
+            connection.commit()
+            return jsonify({"message":"BOOKING VERIFIED"})
+        except:
+            connection.rollback()
+            return jsonify({"message":"BOOKING NOT VERIFIED"})
 
 
 
