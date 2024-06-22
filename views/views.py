@@ -131,6 +131,19 @@ class ViewDependants(Resource):
           else:
                dependants = cursor.fetchall()
                return jsonify(dependants)
+          
+
+class Laboratories(Resource):
+    def get(self):
+         connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+         sql = "SELECT * FROM laboratories"
+         cursor  = connection.cursor(pymysql.cursors.DictCursor)
+         cursor.execute(sql)
+         if cursor.rowcount == 0:
+             return jsonify({ "message": "No Laboratories" })
+         else:
+             labs = cursor.fetchall()
+             return jsonify(labs)
 
 
 
