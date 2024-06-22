@@ -220,6 +220,15 @@ class MyBookings(Resource):
                 # we pass our bookings to json.dumps
                 ourbookings = json.dumps(bookings, indent=1, sort_keys=True, default=str)
                 return json.loads(ourbookings)
+            
+class Payment(Resource):
+    def post(self):
+        data = request.json
+        invoice_no = data["invoice_no"]
+        amount = data["amount"]
+        phone = data["phone"]
+        mpesa_payment(amount, phone, invoice_no)
+        return jsonify({"message":"PAYMENT SUCCESSFUL"})
 
 
 
