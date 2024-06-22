@@ -73,3 +73,34 @@ def send_sms(phone, message):
         print("Error is",  error )
 # send_sms("+254716988147", "This is my message")
 
+
+
+# hash password
+import bcrypt
+# bcrypt its a module for hashing and checking passwords
+# its very secure
+def hash_password(password):
+    bytes = password.encode("utf-8")
+    # password is encoded into bytes
+    # it is necessary because bcrypt library works well with byte data
+    # print(bytes)
+    salt  = bcrypt.gensalt()
+    # using a unique salt for each password ensures that even if two users have same password,
+    # their hased password will be different
+    # print(salt)
+    hash = bcrypt.hashpw(bytes, salt)
+    # print(hash)
+    return hash.decode()
+
+# hash_password(input("Enter your password: "))
+
+# verify password
+def hash_verify(password,  hashed_password):
+    bytes = password.encode('utf-8')
+    result = bcrypt.checkpw(bytes, hashed_password.encode())
+    print(result)
+    return result
+
+
+
+# hash_verify("1234", "$2b$12$d8FWh.IqQE/MTgncFUm6k.tRqbkdzCyQA5QELRj63MzMsJ6aHzvcG")
