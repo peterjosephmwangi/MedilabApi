@@ -112,6 +112,28 @@ class AddDependant(Resource):
             return jsonify({ "message": "POST FAILED. Dependant NOT SAVED"  })
 
 
+class ViewDependants(Resource):
+     @jwt_required(fresh=True)
+     def post(self):
+          json = request.json
+          member_id = json['member_id']
+          sql = "select * from dependants where member_id = %s"
+          connection = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',
+                                                user='pebu',
+                                                password='peter1234',
+                                                database='pebu$default')
+
+          cursor = connection.cursor(pymysql.cursors.DictCursor)
+          cursor.execute(sql, member_id)
+          count = cursor.rowcount
+          if count == 0:
+               return jsonify({'message': 'Member does Not exist'})
+          else:
+               dependants = cursor.fetchall()
+               return jsonify(dependants)
+
+
+
 
 
 
