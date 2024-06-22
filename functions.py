@@ -36,3 +36,21 @@ def  check_phone(phone):
 # phone_number = input("Enter your number")
 # check_phone(phone_number)
 
+
+# check password validity
+import re
+def passwordValidity(password):
+    if len (password) < 8 :
+        return ("Password is too short")
+    elif not re.search ("[A-Z]", password):
+        return ("Password must have atleast 1 uppercase")
+    elif not re.search("[a-z]", password):
+     return("Password must have atleast 1 lowercase")
+    elif not re.search("[0-9]", password):
+        return ("password must contain atleast a number")
+    elif not re.search("[_@$]", password):
+        return ("password must contain atleast a special character")
+    else:
+        return True
+
+# passwordValidity(input("Enter your password: "))
