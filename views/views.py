@@ -144,6 +144,19 @@ class Laboratories(Resource):
          else:
              labs = cursor.fetchall()
              return jsonify(labs)
+         
+class Location(Resource):
+    def post(self):
+         connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+         sql = "SELECT * FROM locations"
+         cursor  = connection.cursor(pymysql.cursors.DictCursor)
+         cursor.execute(sql)
+         if cursor.rowcount == 0:
+             return jsonify({ "message": "No Locations" })
+         else:
+             locations = cursor.fetchall()
+             return jsonify(locations)
+
 
 
 
