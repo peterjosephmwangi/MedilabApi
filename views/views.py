@@ -39,4 +39,38 @@ class MemberSignup(Resource):
 
         else:
             return jsonify({  "message": response })
+        
+
+class MemberSignin(Resource):
+    def post(self):
+        # get request from client
+        data = request.json
+        email= data["email"]
+        password= data["password"]
+        # connect to DB
+        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+
+        # check if email exists
+        sql = "select * from members where email = %s"
+        cursor  = connection.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(sql, email)
+        if cursor.rowcount == 0:
+            return jsonify({  "message":"Email does not exist!"  })
+        else:
+            # check password
+            member = cursor.fetchone()
+            hashed_password = member['password']
+            is_matchpassword = hash_verify(password, hashed_password)
+            if  is_matchpassword  == True:
+                access_token = create_access_token(identity=member, fresh=True)
+                return jsonify({  'access_token': access_token,
+
+                                'member':member
+                                })
+            elif is_matchpassword == False:
+                return jsonify({  "message":"LOGIN FAILED"  })
+            else:
+                return jsonify({  "message": "Something went wrong" })
+
+
 
