@@ -88,6 +88,30 @@ class MemberProfile(Resource):
         else:
             member = cursor.fetchone()
             return jsonify({  "message": member })
+        
+class AddDependant(Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data =  request.json
+        member_id = data["member_id"]
+        surname = data["surname"]
+        others = data["others"]
+        dob = data["dob"]
+        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        cursor = connection.cursor()
+        # insert into dependants table
+        sql = "insert into dependants (member_id, surname, others, dob) values(%s, %s, %s, %s)"
+        data = (member_id , surname, others, dob)
+        try:
+            cursor.execute(sql, data)
+            connection.commit( )
+            return jsonify({ "message": "POST SUCCESSFUL. Dependant SAVED"  })
+
+        except:
+            connection.rollback()
+            return jsonify({ "message": "POST FAILED. Dependant NOT SAVED"  })
+
+
 
 
 
