@@ -104,3 +104,44 @@ def hash_verify(password,  hashed_password):
 
 
 # hash_verify("1234", "$2b$12$d8FWh.IqQE/MTgncFUm6k.tRqbkdzCyQA5QELRj63MzMsJ6aHzvcG")
+
+# encrypt data
+from cryptography.fernet import Fernet
+# we import Fernet class
+# the module is used for encryption and decryption
+def gen_key():
+# function used to generate an new encryption key
+    key = Fernet.generate_key()
+    # print(key)
+    with open("key.key", "wb") as key_file:
+    # with open it opens a new file if it exists
+    # creates a new file if it doesnt exist
+    # wb- write binary ensures the file is properly closed after writing on it
+        key_file.write(key)
+
+
+# gen_key()
+# load key
+def load_key():
+    return open("/home/pebu/mysite/key.key", "rb").read()
+# it reads the entire content of the file
+
+# load_key()
+
+# encrypt data
+def encrypt(data):
+    key = load_key()
+    f = Fernet(key)
+    # print(f)
+    # this creates a fernet object 4 encryption
+    encrypt_data = f.encrypt(data.encode())
+    return (encrypt_data.decode())
+
+# encrypt("1234")
+
+# decrypt data
+def decrypt(encrypted_data):
+    key = load_key()
+    f = Fernet(key)
+    decrypted_data = f.decrypt(encrypted_data.encode())
+    return (decrypted_data.decode())
