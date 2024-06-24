@@ -22,7 +22,7 @@ class MemberSignup(Resource):
         response = passwordValidity(password)
         if response == True:
             # connect to DB
-            connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com', user='pebu',password='peter1234',database='pebu$default')
+            connection  = pymysql.connect(host='localhost', user='pebu',password='peter1234',database='Medilab')
             cursor  = connection.cursor()
             # instert into database
             sql = "insert into members (surname, others, gender, email, phone, dob, status, password, location_id) values(%s, %s, %s, %s, %s, %s, %s, %s,%s)"
@@ -48,7 +48,7 @@ class MemberSignin(Resource):
         email= data["email"]
         password= data["password"]
         # connect to DB
-        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
 
         # check if email exists
         sql = "select * from members where email = %s"
@@ -78,7 +78,7 @@ class MemberProfile(Resource):
         data = request.json
         member_id = data["member_id"]
         # connect to DB
-        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
         sql = "SELECT * FROM members WHERE member_id = %s"
         cursor  = connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(sql, member_id)
@@ -97,7 +97,7 @@ class AddDependant(Resource):
         surname = data["surname"]
         others = data["others"]
         dob = data["dob"]
-        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
         cursor = connection.cursor()
         # insert into dependants table
         sql = "insert into dependants (member_id, surname, others, dob) values(%s, %s, %s, %s)"
@@ -118,10 +118,10 @@ class ViewDependants(Resource):
           json = request.json
           member_id = json['member_id']
           sql = "select * from dependants where member_id = %s"
-          connection = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',
+          connection = pymysql.connect(host='localhost',
                                                 user='pebu',
                                                 password='peter1234',
-                                                database='pebu$default')
+                                                database='Medilab')
 
           cursor = connection.cursor(pymysql.cursors.DictCursor)
           cursor.execute(sql, member_id)
@@ -135,7 +135,7 @@ class ViewDependants(Resource):
 
 class Laboratories(Resource):
     def get(self):
-         connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+         connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
          sql = "SELECT * FROM laboratories"
          cursor  = connection.cursor(pymysql.cursors.DictCursor)
          cursor.execute(sql)
@@ -147,7 +147,7 @@ class Laboratories(Resource):
          
 class Location(Resource):
     def post(self):
-         connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+         connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
          sql = "SELECT * FROM locations"
          cursor  = connection.cursor(pymysql.cursors.DictCursor)
          cursor.execute(sql)
@@ -161,7 +161,7 @@ class LabTests(Resource):
     def post(self):
         data = request.json
         lab_id = data["lab_id"]
-        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
         sql = "SELECT * FROM lab_tests WHERE lab_id = %s"
         cursor = connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(sql, lab_id)
@@ -187,7 +187,7 @@ class MakeBooking(Resource):
         lab_id = data["lab_id"]
         invoice_no = data["invoice_no"]
 
-        connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+        connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
         cursor = connection.cursor()
 
         sql = "insert into bookings(member_id,booked_for,dependant_id,test_id,appointment_date,appointment_time,where_taken,latitude,longitude,status,lab_id,invoice_no) values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
@@ -206,7 +206,7 @@ class MyBookings(Resource):
         def get(self):
             data = request.json
             member_id= data["member_id"]
-            connection  = pymysql.connect(host='pebu.mysql.pythonanywhere-services.com',user='pebu', password='peter1234', database='pebu$default' )
+            connection  = pymysql.connect(host='localhost',user='pebu', password='peter1234', database='Medilab' )
             sql = "select* from bookings where member_id=%s "
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             cursor.execute(sql, member_id)

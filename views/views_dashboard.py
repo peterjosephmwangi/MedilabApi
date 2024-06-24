@@ -18,7 +18,7 @@ class LabSignup(Resource):
         permit_id = data["permit_id"]
         password = data["password"]
 
-        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com",user="pebu",password="peter1234",database="pebu$default")
+        connection = pymysql.connect(host="localhost",user="pebu",password="peter1234",database="Medilab")
         cursor = connection.cursor()
                    # check if password is valid
         response = passwordValidity(password)
@@ -84,7 +84,7 @@ class LabProfile(Resource):
   def post(self):
       data = request.json
       lab_id = data["lab_id"]
-      connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+      connection = pymysql.connect(host="localhost", user="pebu", password="peter1234", database="Medilab")
       sql = "select * from laboratories where lab_id = %s"
       cursor = connection.cursor(pymysql.cursors.DictCursor)
       cursor.execute(sql, lab_id)
@@ -107,7 +107,7 @@ class Addlabtest(Resource):
          test_discount=data["test_discount"]
 
         #  connection
-         connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+         connection = pymysql.connect(host="localhost", user="pebu", password="peter1234", database="Medilab")
          cursor=connection.cursor()
          sql="INSERT INTO lab_tests(lab_id,test_name,test_description,test_cost,test_discount) values(%s,%s,%s,%s,%s)"
          data=(lab_id,test_name,test_description,test_cost,test_discount)
@@ -128,7 +128,7 @@ class ViewLabTest(Resource):
             data = request.json
             lab_id = data["lab_id"]
 
-            connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com",user="pebu",password="peter1234",database="pebu$default")
+            connection = pymysql.connect(host="localhost",user="pebu",password="peter1234",database="Medilab")
             cursor = connection.cursor(pymysql.cursors.DictCursor)
             sql = "SELECT * FROM lab_tests WHERE lab_id =%s"
             data = (lab_id)
@@ -185,7 +185,7 @@ class AddNurse(Resource):
         password = data["password"]
         lab_id = data["lab_id"]
 
-        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        connection = pymysql.connect(host="localhost", user="pebu", password="peter1234", database="Medilab")
         sql = "insert into nurses(surname, others, gender,phone, password,  lab_id) values(%s, %s, %s, %s,  %s, %s)"
         cursor = connection.cursor()
 
@@ -205,7 +205,7 @@ class ViewNurses(Resource):
         data = request.json
         nurse_id = data["nurse_id"]
 
-        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        connection = pymysql.connect(host="localhost", user="pebu", password="peter1234", database="Medilab")
         cursor = connection.cursor(pymysql.cursors.DictCursor)
 
         sql = "SELECT * FROM nurses WHERE nurse_id =%s"
@@ -227,7 +227,7 @@ class taskallocation (Resource):
         nurse_id=data["nurse_id"]
         invoice_no=data["invoice_no"]
 
-        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        connection = pymysql.connect(host="localhost", user="pebu", password="peter1234", database="Medilab")
         sql = "select * from bookings where status = 'Pending' "
         cursor=connection.cursor(pymysql.cursors.DictCursor)
         cursor.execute(sql)
