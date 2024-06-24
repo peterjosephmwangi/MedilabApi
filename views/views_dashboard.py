@@ -119,3 +119,24 @@ class Addlabtest(Resource):
          except:
              connection.rollback()
              return jsonify({"massage":"Lab not posted"})
+         
+
+    # view lab tests
+class ViewLabTest(Resource):
+        @jwt_required(fresh=True)
+        def post(self):
+            data = request.json
+            lab_id = data["lab_id"]
+
+            connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com",user="pebu",password="peter1234",database="pebu$default")
+            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            sql = "SELECT * FROM lab_tests WHERE lab_id =%s"
+            data = (lab_id)
+
+            cursor.execute(sql,data)
+            count = cursor.rowcount
+            if count == 0:
+                return jsonify ({"mesage":"Lab test does not exist."})
+            else:
+                labtest = cursor.fetchall()
+                return jsonify ({"message": labtest})
