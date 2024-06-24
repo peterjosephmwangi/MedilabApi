@@ -196,4 +196,24 @@ class AddNurse(Resource):
         # except:
         #     connection.rollback()
         #     return jsonify({"message": "Nurse not added"})
+    
+
+# view nusers
+class ViewNurses(Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data = request.json
+        nurse_id = data["nurse_id"]
+
+        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+
+        sql = "SELECT * FROM nurses WHERE nurse_id =%s"
+        data = (nurse_id)
+        cursor.execute(sql, data)
+        if cursor.rowcount == 0:
+            return jsonify({"message": "Nurse does not exist"})
+        else:
+            nurse = cursor.fetchone()
+            return jsonify({"message": nurse})
 
