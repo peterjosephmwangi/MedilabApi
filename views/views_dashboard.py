@@ -174,3 +174,26 @@ class Viewlabookings(Resource):
             booking = json.dumps(bookings,indent=1, sort_keys= True,default=str)
             return json.loads(booking)
 
+class AddNurse(Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data = request.json
+        surname = data["surname"]
+        others = data["others"]
+        gender = data["gender"]
+        phone = data["phone"]
+        password = data["password"]
+        lab_id = data["lab_id"]
+
+        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        sql = "insert into nurses(surname, others, gender,phone, password,  lab_id) values(%s, %s, %s, %s,  %s, %s)"
+        cursor = connection.cursor()
+
+        # try:
+        cursor.execute(sql, (surname, others, gender,phone,hash_password(password), lab_id))
+        connection.commit()
+        return jsonify({"message": "Nurse added"})
+        # except:
+        #     connection.rollback()
+        #     return jsonify({"message": "Nurse not added"})
+
