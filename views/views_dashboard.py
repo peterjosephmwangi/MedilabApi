@@ -76,3 +76,20 @@ class LabSignin(Resource):
                 return jsonify({  "message":"LOGIN FAILED"  })
             else:
                 return jsonify({  "message": "Something went wrong" })
+
+
+# view lab profile using lab_id
+class LabProfile(Resource):
+  @jwt_required(fresh=True)
+  def post(self):
+      data = request.json
+      lab_id = data["lab_id"]
+      connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+      sql = "select * from laboratories where lab_id = %s"
+      cursor = connection.cursor(pymysql.cursors.DictCursor)
+      cursor.execute(sql, lab_id)
+      if cursor.rowcount == 0:
+          return jsonify({"message":"lab does not exist"})
+      else:
+          lab = cursor.fetchone()
+          return jsonify({"message":lab})
