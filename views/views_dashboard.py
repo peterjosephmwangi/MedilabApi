@@ -140,3 +140,37 @@ class ViewLabTest(Resource):
             else:
                 labtest = cursor.fetchall()
                 return jsonify ({"message": labtest})
+            
+# view lab bookings
+class Viewlabookings(Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data = request.json
+        lab_id = data["lab_id"]
+        connection = pymysql.connect(host='localhost',user='root',password='',database='Medilab')
+        cursor = connection.cursor(pymysql.cursors.DictCursor)
+        sql = "select* from bookings where lab_id=%s"
+        cursor.execute(sql,lab_id)
+        count = cursor.rowcount
+        if count == 0:
+            return jsonify({"message":"No bookings"})
+        else:
+            bookings = cursor.fetchall()
+            # associate member_id with the booking
+            # we want to loop all the bookings
+            for booking in bookings:
+                member_id = booking["member_id"]
+                # return jsonify(member_id)
+                sql = "SELECT * FROM members WHERE member_id = %s"
+                cursor = connection.cursor(pymysql.cursors.DictCursor)
+                cursor.execute(sql, member_id)
+                member = cursor.fetchone()
+                # result is attached to booking dictionary under key
+                booking['key'] = member
+                # return jsonify(member)
+
+
+            import json
+            booking = json.dumps(bookings,indent=1, sort_keys= True,default=str)
+            return json.loads(booking)
+
