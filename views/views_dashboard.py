@@ -217,3 +217,35 @@ class ViewNurses(Resource):
             nurse = cursor.fetchone()
             return jsonify({"message": nurse})
 
+
+
+# task allocations
+class taskallocation (Resource):
+    @jwt_required(fresh=True)
+    def post(self):
+        data=request.json
+        nurse_id=data["nurse_id"]
+        invoice_no=data["invoice_no"]
+
+        connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+        sql = "select * from bookings where status = 'Pending' "
+        cursor=connection.cursor(pymysql.cursors.DictCursor)
+        cursor.execute(sql)
+        count=cursor.rowcount
+        if count == 0:
+            return jsonify({"message":"No pending tasks"})
+
+        else:
+            sql1="insert into nurse_lab_allocations (nurse_id,invoice_no) values(%s,%s)"
+            data=(nurse_id,invoice_no)
+            cursor1 = connection.cursor()
+            try:
+                cursor1.execute(sql1, data)
+                connection.commit()
+                return jsonify({"message":"Task allocated"})
+            except:
+                connection.rollback()
+                return jsonify({"message":"Task not allocated"})
+
+
+
