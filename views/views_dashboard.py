@@ -93,3 +93,29 @@ class LabProfile(Resource):
       else:
           lab = cursor.fetchone()
           return jsonify({"message":lab})
+      
+
+# add lab tests
+class Addlabtest(Resource):
+    # @jwt_required(fresh=True)
+    def post(self):
+         data = request.json
+         lab_id=data["lab_id"]
+         test_name=data["test_name"]
+         test_description=data["test_description"]
+         test_cost=data["test_cost"]
+         test_discount=data["test_discount"]
+
+        #  connection
+         connection = pymysql.connect(host="pebu.mysql.pythonanywhere-services.com", user="pebu", password="peter1234", database="pebu$default")
+         cursor=connection.cursor()
+         sql="INSERT INTO lab_tests(lab_id,test_name,test_description,test_cost,test_discount) values(%s,%s,%s,%s,%s)"
+         data=(lab_id,test_name,test_description,test_cost,test_discount)
+
+         try:
+            cursor.execute(sql,data)
+            connection.commit()
+            return jsonify({"message":"Labposted"})
+         except:
+             connection.rollback()
+             return jsonify({"massage":"Lab not posted"})
